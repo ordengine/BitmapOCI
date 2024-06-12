@@ -1,0 +1,128 @@
+<div id="root"></div>
+<script type="module">
+    window.local = true
+    await import('https://ordiscan.com/content/0b7ba5105ad7e8d47f32530e937a315667578c87827876cec754bbd970793547i0')
+        .then(o_o => o_o.ordEngine({
+            react: true,
+            tailwind: true,
+            statery: true,
+        }))
+
+    const Body = () => {
+        const [bitmapNumber, setBitmapNumber] = useState(0)
+        const [satoshi, setSatoshi] = useState('')
+        const [inscriptionId, setInscriptionId] = useState('')
+        const [childrenIds, setChildrenIds] = useState([])
+
+        const inputRef = useRef()
+
+
+
+        const fetchSatFromIndex = useCallback(async () => {
+            setSatoshi('fetching satoshi from index..')
+
+            setBitmapNumber(inputRef.current.value || 0)
+
+            setInscriptionId('')
+            setChildrenIds([])
+
+            const bitdex = await import('/indexModule.mjs')
+
+              const sat = await bitdex.getBitmapSat(inputRef.current.value)
+
+            setSatoshi(sat)
+
+            setInscriptionId('fetching inscription ID..')
+
+            const idData = await fetch('https://ordiscan.com/r/sat/' + sat).then(r => r.json())
+
+            setInscriptionId(idData.ids[0])
+
+            const children = await fetch('https://ordiscan.com/r/children/' + idData.ids[0]).then(r => r.json())
+
+            setChildrenIds(children.ids)
+
+        }, [setSatoshi, bitmapNumber])
+
+        useEffect(() => {
+            fetchSatFromIndex()
+        }, [])
+
+
+        return html`
+            <div class="h-full p-2 bg-neutral-700 flex">
+                <div class="mx-2">
+                    <div class="text-lg text-orange-500 p-2">
+                        bitmap number:
+                    </div>
+
+                    <input ref=${inputRef}
+                           class="w-32 rounded-md ring-2 ring-orange-500 p-2 text-xl bg-neutral-800 text-orange-200"
+                           type="number" placeholder="0"/>
+
+
+                    <button onClick=${fetchSatFromIndex}
+                            class=" my-4 bg-neutral-900 text-orange-300 p-2 rounded-md ring-2 ring-lime-400">
+                        fetch data
+                    </button>
+                </div>
+
+                <div class="m-2 w-full ring-2 ring-orange-500 rounded-md bg-neutral-800 text-orange-400">
+                    <div class="p-2 text-2xl">
+                        <span>🟧</span> ${bitmapNumber}<span class="opacity-70">.bitmap:</span>
+                    </div>
+                    <div class="p-2">
+                        <span class="text-neutral-200">satoshi: </span><a target="_blank"
+                                                                          href=${'https://ordiscan.com/sat/' + satoshi}
+                                                                          class="text-xl hover:text-cyan-500">${satoshi}🔗</a>
+                    </div>
+                    <div class="p-2">
+                        <span class="text-neutral-200">inscription ID:</span> <a target="_blank"
+                                                                          href=${'https://ordiscan.com/inscription/' + inscriptionId}
+                            class="text-md hover:text-cyan-500">${inscriptionId}🔗</a>
+                    </div>
+
+                    <div class="p-2">
+                        ${childrenIds.length > 0 ? html`
+                            ${childrenIds.map((c, i) => {
+                                return html`
+                                    <div class="text-neutral-200 ring-2 ring-orange-700 rounded-md p-2 2">
+                                        <div>
+                                            <span class="opacity-70">child inscription #${i}:</span> <a target="_blank"
+                                                                          href=${'https://ordiscan.com/inscription/' + inscriptionId}
+                            class="text-sm hover:text-cyan-500">${inscriptionId}🔗</a>
+                                        </div>
+                                        <div>
+                                            <iframe src=${'https://ordiscan.com/content/' + c} />
+                                        </div>
+                                    </div>
+                                `
+                            })}
+                        ` : html`
+                            <span class="text-neutral-200">child inscriptions:</span> <span
+                                    class="text-md">${childrenIds}</span>
+                        `}
+                    </div>
+                </div>
+
+            </div>
+        `
+    }
+
+    const Header = () => {
+        return html`
+            <div class="flex p-2 bg-neutral-800 hover:bg-neutral-700">
+                <div class="text-orange-300 text-sm">
+                    bitmap on-chain index test
+                </div>
+            </div>
+        `
+    }
+
+    ReactDOM.render(html`
+        <div class="flex flex-col w-full h-full">
+            <${Header}/>
+            <${Body}/>
+        </div>
+    `, document.getElementById('root'))
+</script>
