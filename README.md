@@ -23,10 +23,31 @@ instead of just a raw array of each satoshi number compressed with brotli, we ar
 2. convert this sorted array into an array of just the deltas (difference between current and last sat)
 3. append an array of the original sat positions for rebuilding
 
-this works because a lot of bitmaps were minted in bulk transactions, so the deltas between the sat numbers of sequential bitmaps end up being the same, since the UTXO's were split into the same amount of padding/postage.
+this ends up looking like:
+
+```
+[
+  [
+    393366314270,
+    546,
+    3835,
+    3835,
+    3835,
+    3835,
+    3835,
+    3835,
+    3835,
+    3835,
+    3835,
+```
+
+this works because a lot of bitmaps were minted in bulk transactions, so the deltas between the sat numbers of sequential bitmaps end up being the same (3835 in the example above), since the UTXO's were split into the same amount of padding/postage.  brotli compression can then take advantage of this by only saving the number once + how many times it's repeated.
+
+basically the repeating parts of the array [3835,3835,3835,3835,3835,3835,3835, 3835] gets saved as just [3835 x 8]
 
 the encoder file shows how the chunks are built from the full CSV's: https://github.com/ordengine/BitmapOCI/blob/main/encoder.js
 
 the module shows how these compressed lists are then rebuilt for querying - https://github.com/ordengine/BitmapOCI/blob/main/indexModule.mjs
 
 [chisel.xyz](https://chisel.xyz) script for brotli inscriptions (with custom ambifix, metadata, parents etc) https://github.com/ordengine/BitmapOCI/blob/main/chisel.mjs
+
