@@ -16,8 +16,6 @@
 
         const inputRef = useRef()
 
-
-
         const fetchSatFromIndex = useCallback(async () => {
             setSatoshi('fetching satoshi from index..')
 
@@ -93,15 +91,12 @@
                             class="text-sm hover:text-cyan-500">${inscriptionId}🔗</a>
                                         </div>
                                         <div>
-                                            <iframe src=${'https://ordiscan.com/content/' + c} />
+                                            <iframe class="w-1/3 h-1/3" src=${'https://ordiscan.com/content/' + c} />
                                         </div>
                                     </div>
                                 `
                             })}
-                        ` : html`
-                            <span class="text-neutral-200">child inscriptions:</span> <span
-                                    class="text-md">${childrenIds}</span>
-                        `}
+                        ` : ''}
                     </div>
                 </div>
 
