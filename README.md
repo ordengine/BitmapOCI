@@ -4,7 +4,7 @@
 
 
 ### inscribed module:
-https://ordinals.com/inscription/72156655
+https://ordinals.com/content/840bc0df4ffc5a7ccedbee35e97506c9577160e233982e627d0045d06366e362i0
 
 ### data chunks:
 
@@ -16,7 +16,7 @@ https://ordinals.com/content/bb9438f4345f223c6f4f92adf6db12a82c45d1724019ecd7b6a
 https://ordinals.com/content/bb0542d4606a9e7eb4f31051e91f7696040db06ca1383dff98505618c34d7df7i0
 https://ordinals.com/content/bb06a4dffba42b6b513ddee452b40a67688562be4a1345127e4d57269e6b2ab6i0
 https://ordinals.com/content/bb076934c1c22007b315dd1dc0f8c4a2f9d52f348320cfbadc7c0bd99eaa5e18i0
-https://ordinals.com/content/bb084ed0d70c336861e794c5a2d41a19df8b5531b51ffe71a868695c20cafed2i0
+https://ordinals.com/content/bb986a1208380ec7db8df55a01c88c73a581069a51b5a2eb2734b41ba10b65c2i0
 
 
 .
